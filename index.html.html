@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>s0rrow's Vault | Ultimate Player Guide</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  
+  <!-- Premium Sci-Fi Space Mono Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    /* --- CSS ARCHITECTURE & VARIABLE MANIFEST --- */
+    :root {
+      --bg-deep: #020408;
+      --bg-navy: #050A14;
+      --bg-layer: #08111F;
+      --cyan: #00E5FF;
+      --cyan-dim: rgba(0, 229, 255, 0.25);
+      --cyan-glow: rgba(0, 229, 255, 0.05);
+      --text-white: #ffffff;
+      --text-muted: #a1a1aa;
+      --accent-purple: #b026ff;
+      --alert-red: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      cursor: crosshair;
+    }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: var(--bg-deep);
+      color: var(--text-muted);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* --- LAYER 1 & LAYER 4: TACTICAL GRID & SCANLINES --- */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: 
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+        linear-gradient(95deg, rgba(255, 0, 0, 0), rgba(0, 255, 0, 0), rgba(0, 0, 255, 0));
+      background-size: 100% 4px, 6px 100%;
+      z-index: 999;
+      pointer-events: none;
+      opacity: 0.02;
+    }
+
+    .tactical-grid {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        linear-gradient(to right, rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: 1;
+      animation: gridScroll 120s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes gridScroll {
+      0% { background-position: 0 0; }
+      100% { background-position: 40px 80px; }
+    }
+
+    /* --- LAYER 2: ROTATING RADAR SYSTEM --- */
+    .radar-container {
+      position: absolute;
+      top: 180px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 750px;
+      height: 750px;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.15;
+    }
+
+    .radar-circle {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px dashed rgba(0, 229, 255, 0.15);
+      border-radius: 50%;
+    }
+    .rc-1 { width: 100px; height: 100px; }
+    .rc-2 { width: 300px; height: 300px; }
+    .rc-3 { width: 550px; height: 550px; border-style: solid; border-width: 1px; opacity: 0.5;}
+    .rc-4 { width: 750px; height: 750px; }
+
+    .radar-sweep {
+      position: absolute;
+      width: 100%; height: 100%;
+      background: conic-gradient(from 0deg, rgba(0, 229, 255, 0.08) 0deg, rgba(0, 229, 255, 0) 90deg);
+      border-radius: 50%;
+      animation: sweep 20s linear infinite;
+    }
+
+    .radar-crosshair-h {
+      position: absolute; top: 50%; left: 0; width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.2) 50%, transparent);
+    }
+    .radar-crosshair-v {
+      position: absolute; left: 50%; top: 0; width: 1px; height: 100%;
+      background: linear-gradient(180deg, transparent, rgba(0, 229, 255, 0.2) 50%, transparent);
+    }
+
+    @keyframes sweep {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* --- LAYER 3: CLASSIFIED WATERMARKS --- */
+    .watermark {
+      position: fixed;
+      font-size: 7vw;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.015);
+      text-transform: uppercase;
+      letter-spacing: 12px;
+      user-select: none;
+      pointer-events: none;
+      z-index: 1;
+      white-space: nowrap;
+    }
+    .wm-1 { top: 12%; left: -5%; transform: rotate(-15deg); }
+    .wm-2 { bottom: 15%; right: -5%; transform: rotate(-15deg); }
+
+    /* --- LAYER 5: AMBIENT DATA PARTICLES & NETWORK --- */
+    #particle-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* --- CORNER HUD SYSTEM PANELS --- */
+    .hud-panel {
+      position: fixed;
+      padding: 8px 14px;
+      background: rgba(2, 4, 8, 0.9);
+      border: 1px solid var(--cyan-dim);
+      font-size: 11px;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      z-index: 10;
+      text-transform: uppercase;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+    }
+    .hud-tl { top: 20px; left: 20px; border-radius: 0 0 4px 0; }
+    .hud-tr { top: 20px; right: 20px; border-radius: 0 0 0 4px; display: flex; flex-direction: column; gap: 6px; }
+    .hud-bl { bottom: 20px; left: 20px; border-radius: 0 4px 0 0; }
+    .hud-br { bottom: 20px; right: 20px; border-radius: 4px 0 0 0; }
+
+    /* --- DISCORD LINK INTEGRATION CONFIG --- */
+    .discord-sublink {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      border-top: 1px dashed rgba(0, 229, 255, 0.25);
+      padding-top: 6px;
+      margin-top: 2px;
+      letter-spacing: 1px;
+      color: var(--text-white);
+    }
+    .discord-logo-svg {
+      color: var(--cyan);
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+    .copy-btn-node {
+      background: transparent;
+      border: none;
+      color: var(--cyan);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+      transition: color 0.2s, transform 0.1s;
+    }
+    .copy-btn-node:hover {
+      color: var(--text-white);
+    }
+    .copy-btn-node:active {
+      transform: scale(0.9);
+    }
+    .copy-toast {
+      font-size: 8px;
+      color: var(--bg-deep);
+      background: var(--cyan);
+      padding: 1px 4px;
+      font-weight: bold;
+      border-radius: 1px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    /* --- BACKGROUND LOG FEED --- */
+    .terminal-feed {
+      position: fixed;
+      bottom: 80px;
+      left: 20px;
+      font-size: 10px;
+      color: rgba(0, 229, 255, 0.25);
+      z-index: 2;
+      pointer-events: none;
+      max-width: 300px;
+    }
+    .log-line { margin-bottom: 4px; animation: logFade 6s ease-in-out infinite alternate; }
+
+    /* --- INTERFACE CONTAINERS --- */
+    .main-container {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 140px 20px 100px 20px;
+      z-index: 5;
+    }
+
+    /* --- HEADER AREA --- */
+    .wiki-header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+    
+    .wiki-header h1 {
+      color: var(--text-white);
+      font-size: 42px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 8px;
+      margin-bottom: 18px;
+      text-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+      animation: titlePulse 4s ease-in-out infinite;
+      user-select: none;
+    }
+
+    @keyframes titlePulse {
+      0%, 100% { text-shadow: 0 0 20px rgba(0, 229, 255, 0.3); }
+      50% { text-shadow: 0 0 35px rgba(0, 229, 255, 0.65); color: #fbfbfb; }
+    }
+
+    .terminal-panel-wrapper {
+      display: inline-block;
+      background: rgba(5, 10, 20, 0.8);
+      border: 1px solid var(--cyan);
+      padding: 8px 24px;
+      position: relative;
+      box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.2);
+    }
+
+    .terminal-panel-wrapper::before {
+      content: '■'; position: absolute; left: -6px; top: 50%; transform: translateY(-50%); color: var(--cyan); font-size: 10px;
+    }
+    .terminal-panel-wrapper::after {
+      content: '■'; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); color: var(--cyan); font-size: 10px;
+    }
+
+    .badge {
+      color: var(--cyan);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* --- SEARCH TERMINAL ENGINE --- */
+    .search-terminal {
+      position: relative;
+      background: rgba(5, 10, 20, 0.85);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      padding: 14px 22px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.05);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .search-terminal:focus-within {
+      border-color: var(--cyan);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(0, 229, 255, 0.1);
+    }
+
+    .search-prompt {
+      color: var(--accent-purple);
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    #vault-search {
+      flex-grow: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-white);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    #vault-search::placeholder {
+      color: rgba(0, 229, 255, 0.25);
+    }
+
+    .blinking-cursor {
+      display: inline-block;
+      width: 10px;
+      height: 18px;
+      background-color: var(--cyan);
+      animation: terminalBlink 1s step-end infinite;
+    }
+
+    @keyframes terminalBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* --- FAQ CARDS --- */
+    .faq-wrapper {
+      margin-top: 20px;
+    }
+
+    .faq-item {
+      background: rgba(5, 10, 20, 0.75);
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      margin-bottom: 18px;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: inset 0 0 12px rgba(0, 229, 255, 0.02);
+    }
+
+    .faq-item:hover {
+      border-color: var(--cyan);
+      background: rgba(8, 17, 31, 0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(0, 229, 255, 0.1), inset 0 0 15px rgba(0, 229, 255, 0.05);
+    }
+
+    .faq-item.active {
+      border-color: var(--cyan);
+      background: rgba(5, 10, 20, 0.95);
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.15);
+    }
+
+    .hover-status-line {
+      position: absolute;
+      top: -10px;
+      left: 15px;
+      font-size: 9px;
+      color: var(--cyan);
+      background: var(--bg-deep);
+      padding: 0 6px;
+      opacity: 0;
+      transform: translateY(3px);
+      transition: all 0.2s ease;
+      pointer-events: none;
+      letter-spacing: 1px;
+    }
+
+    .faq-item:hover .hover-status-line {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .faq-question {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #f4f4f5;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: left;
+      padding: 22px 26px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .question-text {
+      letter-spacing: 0.5px;
+    }
+
+    .icon {
+      font-size: 14px;
+      color: var(--cyan);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .faq-item.active .icon {
+      transform: rotate(90deg);
+      color: var(--text-white);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .faq-answer-inner {
+      padding: 0 26px 26px 26px;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      border-top: 1px dashed rgba(0, 229, 255, 0.15);
+      padding-top: 18px;
+    }
+
+    .verified-banner {
+      font-size: 10px;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.8;
+    }
+    .verified-banner::before {
+      content: '●';
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+
+    /* --- EMBEDDED ORIGINAL DATA CLASS STYLES --- */
+    ul, ol { margin-top: 10px; padding-left: 20px; }
+    li { margin-bottom: 8px; }
+    strong { color: #f4f4f5; }
+    
+    .highlight { color: var(--cyan); font-weight: 700; text-shadow: 0 0 10px rgba(0,229,255,0.2); }
+    .accent { color: var(--accent-purple); font-weight: 700; }
+    .alert { color: var(--alert-red); font-weight: 700; }
+
+    .formula {
+      background: #040811;
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      color: var(--cyan);
+      padding: 12px 18px;
+      margin-top: 12px;
+      display: inline-block;
+      font-size: 12px;
+      border-radius: 2px;
+      box-shadow: inset 0 0 8px rgba(0,229,255,0.1);
+    }
+    .formula::before {
+      content: "$ ";
+      color: #4b5563;
+    }
+
+    .mutation-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .mutation-pill {
+      background: #040811;
+      border: 1px solid rgba(0, 229, 255, 0.1);
+      border-radius: 2px;
+      padding: 8px 14px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mutation-pill .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .mutation-pill .label { font-weight: 700; color: #e4e4e7; }
+    .mutation-pill .value { color: #71717a; }
+
+    .dot-gold { background: #fbbf24; box-shadow: 0 0 8px #fbbf24; }
+    .dot-diamond { background: #22d3ee; box-shadow: 0 0 8px #22d3ee; }
+    .dot-dragonborne { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+    .dot-beast { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+    .dot-titan { background: #a8a29e; box-shadow: 0 0 8px #a8a29e; }
+    .dot-arrancar { background: #c084fc; box-shadow: 0 0 8px #c084fc; }
+    .dot-nen { background: #fde047; box-shadow: 0 0 8px #fde047; }
+    .dot-admin { background: #10b981; box-shadow: 0 0 8px #10b981; }
+
+    /* --- CLASSIFIED EASTER EGG OVERLAY OVERRIDE --- */
+    #operator-override-terminal {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(2, 4, 8, 0.98);
+      z-index: 10000;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      box-shadow: inset 0 0 100px rgba(0, 229, 255, 0.3);
+      border: 4px solid var(--cyan);
+    }
+    .override-box {
+      width: 100%;
+      max-width: 700px;
+      background: #03070e;
+      border: 1px solid var(--cyan);
+      padding: 30px;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0, 229, 255, 0.15);
+    }
+    .override-stream {
+      font-size: 13px;
+      color: var(--cyan);
+      line-height: 1.8;
+      min-height: 220px;
+    }
+    .close-override-cmd {
+      margin-top: 25px;
+      background: transparent;
+      border: 1px dashed var(--cyan);
+      color: var(--cyan);
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 11px;
+      letter-spacing: 2px;
+      transition: all 0.2s;
+    }
+    .close-override-cmd:hover {
+      background: var(--cyan);
+      color: var(--bg-deep);
+      box-shadow: 0 0 15px var(--cyan);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LAYER 1: GRID SYSTEM -->
+  <div class="tactical-grid"></div>
+
+  <!-- LAYER 2: ROTATING TERMINAL RADAR -->
+  <div class="radar-container">
+    <div class="radar-sweep"></div>
+    <div class="radar-circle rc-1"></div>
+    <div class="radar-circle rc-2"></div>
+    <div class="radar-circle rc-3"></div>
+    <div class="radar-circle rc-4"></div>
+    <div class="radar-crosshair-h"></div>
+    <div class="radar-crosshair-v"></div>
+  </div>
+
+  <!-- LAYER 3: CLASSIFIED WATERMARKS -->
+  <div class="watermark wm-1">RESTRICTED ACCESS // TOP SECRET</div>
+  <div class="watermark wm-2">AUTHORIZED PERSONNEL ONLY // VAULT SYSTEM</div>
+
+  <!-- LAYER 5: AMBIENT DATA NETWORKS ELEMENT -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- CORNER HUD SYSTEM PANELS -->
+  <div class="hud-panel hud-tl">SYS.STATUS: ONLINE</div>
+  
+  <div class="hud-panel hud-tr">
+    <div>DATA INTEGRITY: 98%</div>
+    <div class="discord-sublink">
+      <svg class="discord-logo-svg" width="12" height="12" viewBox="0 0 127.14 96.36">
+        <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a74.37,74.37,0,0,0,6.72-10.93,68.6,68.6,0,0,1-10.64-5.12c.91-.66,1.8-1.34,2.65-2a75.58,75.58,0,0,0,72.76,0c.85.69,1.74,1.37,2.65,2a68.42,68.42,0,0,1-10.64,5.12,74.74,74.74,0,0,0,6.72,11.07,105.73,105.73,0,0,0,31.05-18.83C129.24,50.7,123.5,27.82,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z"/>
+      </svg>
+      <span>DM For Suggestions/Issues -- <strong style="color:var(--cyan);">sofiiluvz_</strong></span>
+      <button class="copy-btn-node" id="secure-copy-trigger" title="Copy Operator Username">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+      </button>
+      <span class="copy-toast" id="secure-copy-toast">COPIED</span>
+    </div>
+  </div>
+
+  <div class="hud-panel hud-bl">SECURITY LEVEL: MAXIMUM</div>
+  <div class="hud-panel hud-br">ARCHIVE BUILD v4.3</div>
+
+  <!-- AMBIENT TERMINAL ACTIVITY ENGINE -->
+  <div class="terminal-feed" id="log-feed">
+    <div class="log-line">[23:14:03] Archive synchronized</div>
+    <div class="log-line">[23:14:11] Session integrity confirmed</div>
+    <div class="log-line">[23:14:16] Data validation complete</div>
+  </div>
+
+  <!-- EASTER EGG FULL OVERLAY INTERFACE -->
+  <div id="operator-override-terminal">
+    <div class="override-box">
+      <div class="override-stream" id="override-stream-payload"></div>
+      <button class="close-override-cmd" id="secure-close-override">[ TERMINATE SECURE SESSION ]</button>
+    </div>
+  </div>
+
+  <!-- MAIN INTERFACE CORE -->
+  <div class="main-container">
+    
+    <!-- HEADER BOX -->
+    <div class="wiki-header">
+      <h1 id="vault-interactive-title" style="cursor: pointer;" title="Double-tap sequence requested...">// SORROW'S VAULT</h1>
+      <div class="terminal-panel-wrapper">
+        <span class="badge">TERMINAL CORE INTERFACE // SECURE SESSION</span>
+      </div>
+    </div>
+
+    <!-- SEARCH TERMINAL -->
+    <div class="search-terminal">
+      <span class="search-prompt">root@vault:~#</span>
+      <input type="text" id="vault-search" placeholder="TYPE HERE TO SEARCH...">
+      <span class="blinking-cursor"></span>
+    </div>
+    
+    <!-- FAQ CARDS -->
+    <div class="faq-wrapper" id="faq-directory">
+      
+      <!-- Q1 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
+        <button class="faq-question">
+          <span class="question-text">1. What's the best wave to farm exp in BP, and cash?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            <span class="highlight">Wave 75.</span> You earn cash and exp right away from wave 75. It might not look like a lot initially, but it quickly accumulates into significant progress over multiple runs, due to the fact that the higher the wave, the more you earn.
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> ACCESSING RECORD...</span>
+        <button class="faq-question">
+          <span class="question-text">2. Best waves for traits & craft mats/frags?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            <ul>
+              <li><span class="highlight">Wave 50:</span> Best for traits.</li>
+              <li><span class="highlight">Wave 75:</span> Best for craft materials and fragments.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> RETRIEVING DATA...</span>
+        <button class="faq-question">
+          <span class="question-text">3. WHEN IS ADMIN ABUSE??</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ACCESS GRANTED</div>
+            Every <span class="accent">Saturday at 10 PM UTC+8</span> (Philippine Standard Time).
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
+        <button class="faq-question">
+          <span class="question-text">4. Why won't it let me craft a specific unit?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            Look for the big black button labeled <span class="highlight">"Select Anime"</span>. See that big black button that says "Select Anime"? Click it first, then insert your required level 5 or level 6 unit.
+          </div>
+        </div>
+      </div>
+
+<!-- Q5 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> SCANNING POWER LEVELS...</span>
+        <button class="faq-question">
+          <span class="question-text">5. Top 6 best units</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">DATA STREAM COMPEDITIVE METRICS</div>
+            <div style="line-height: 1.6;">
+              • <span class="highlight">Gon</span> — Purchasable on Hero Summons in the Shop<br>
+              • <span class="highlight">Kaido</span> — Obtained by Rolling<br>
+              • <span class="highlight">Sukuna (Final)</span> — Crafted<br>
+              • <span class="highlight">Hashirama</span> — Via Spin Wheel in the center of the Map<br>
+              • <span class="highlight">Lelouch</span> — Purchasable next to Gold Saitama group rewards<br>
+              • <span class="highlight">God Aizen</span> — Crafted
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> RETRIEVING DATA...</span>
+        <button class="faq-question">
+          <span class="question-text">6. What is acc damage?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ACCESS GRANTED</div>
+            Accurate damage output scales using this explicit backend formula:<br>
+            <div class="formula">(Base DPS × Base CD) × Mutation × Level Multiplier × Trait DMG</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
+        <button class="faq-question">
+          <span class="question-text">7. Will trait/mutation stay when crafted/cloned?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            <p><strong>Traits:</strong> Will <span class="alert">not</span> persist during crafting, but they <span class="highlight">will</span> transfer to cloned units!.</p>
+            <br>
+            <p><strong>Mutations:</strong> will transfer seamlessly to <span class="highlight">both</span> your cloned units and fully crafted units.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q8 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> ACCESSING RECORD...</span>
+        <button class="faq-question">
+          <span class="question-text">8. How to progress faster/earn more cash?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            Mass-purchase <strong>Kakashis</strong>. It is much better if they have mutations, since just a level 1 Nen Kakashi already hits 812 dps—which is crazy considering it only takes up 1 tile!
+          </div>
+        </div>
+      </div>
+
+      <!-- Q9 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> RETRIEVING DATA...</span>
+        <button class="faq-question">
+          <span class="question-text">9. How to maximize cash generation for beginners?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ACCESS GRANTED</div>
+            Equip cash traits like <span class="highlight">Golden Aura, Starbloom, and Kings Fortune</span> (Only use Kings Fortune on your strongest units!).
+            <br><br>
+            <span class="alert">Warning:</span> Do not burn all your trait shards on these early on! You will run out of shards for units that will quickly get replaced once you enter mid/endgame.
+            <br><br>
+            <strong>Active stacking multipliers:</strong>
+            <ul>
+              <li><strong>Friend Boost:</strong> Join friend-boost servers (1 friend = +10% cash boost, maxes out at +40%).</li>
+              <li><strong>Wave Skipping:</strong> Set checkpoint to your highest wave, since the higher the wave the more you earn.</li>
+              <li><strong>Index Bonus:</strong> Complete your Index (every 5 unlocked units gives an extra +5% cash boost)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q10 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
+        <button class="faq-question">
+          <span class="question-text">10. What are the cost/dps multipliers for Mutations?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            <div class="mutation-grid">
+              <div class="mutation-pill"><span class="dot dot-gold"></span><span class="label">Gold</span><span class="value">1.5x Dmg / 2x Cost</span></div>
+              <div class="mutation-pill"><span class="dot dot-diamond"></span><span class="label">Diamond</span><span class="value">2.5x Dmg / 5x Cost</span></div>
+              <div class="mutation-pill"><span class="dot dot-dragonborne"></span><span class="label">Dragonborn</span><span class="value">3.5x Dmg / 10x Cost</span></div>
+              <div class="mutation-pill"><span class="dot dot-beast"></span><span class="label">Beast</span><span class="value">4.5x Dmg / 12.5x Cost</span></div>
+              <div class="mutation-pill"><span class="dot dot-titan"></span><span class="label">Titan</span><span class="value">5x Dmg / 13.5x Cost</span></div>
+              <div class="mutation-pill"><span class="dot dot-arrancar"></span><span class="label">Arrancar</span><span class="value">5.5x Dmg / 15x Cost</span></div>
+              <div class="mutation-pill"><span class="dot dot-nen"></span><span class="label">Nen</span><span class="value">6.5x Dmg / 17.5x Cost</span></div>
+              <div class="mutation-pill" style="border-color: rgba(16, 185, 129, 0.3);"><span class="dot dot-admin"></span><span class="label">Admin</span><span class="value">7x Dmg / No Cost / Unclonable</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q11 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> ACCESSING RECORD...</span>
+        <button class="faq-question">
+          <span class="question-text">11. Is there trait pity?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            No dynamic pity parameters exist for traits.
+          </div>
+        </div>
+      </div>
+
+      <!-- Q12 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> RETRIEVING DATA...</span>
+        <button class="faq-question">
+          <span class="question-text">12. What does AA (Admin Abuse) usually give?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ACCESS GRANTED</div>
+            (this varies depending on what the Dev chooses to do) It typically includes:
+            <ul>
+              <li>2x Cash Drop and 2x Roll Luck.</li>
+              <li>Rolling cap shifts directly from 3 pods up to 6 active pods.</li>
+              <li>Lots of Nen events.</li>
+              <li>Admin Mutation events (7x drop values, Best Mutation).</li>
+              <li>Instant clone timeskips alongside free spins and fragments.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q13 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
+        <button class="faq-question">
+          <span class="question-text">13. What's the max upgrade for luck and cash?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            <ul>
+              <li><strong>Max Luck:</strong> 13x</li>
+              <li><strong>Max Cash:</strong> 3.4x</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    <!-- Q14 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> COMPUTING DPS ARCHIVES...</span>
+        <button class="faq-question">
+          <span class="question-text">14. Best crafts in order</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">FORGE MATRIX READOUT</div>
+            <div style="line-height: 1.6;">
+              1. <span class="highlight">Sukuna (Final)</span> — <span class="alert">5.1k DPS</span><br>
+              2. <span class="highlight">God Aizen</span> — 3.1k DPS<br>
+              3. <span class="highlight">Mahoraga</span> — 3k DPS <span class="alert">(BETTER RNG 60)</span><br>
+              4. <span class="highlight">Kenpachi</span> — 3k DPS <span class="alert">(RNG 40)</span><br>
+              5. <span class="highlight">Ichigo</span> — 1.8k DPS
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q15 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> RETRIEVING DATA...</span>
+        <button class="faq-question">
+          <span class="question-text">15. Is there any way to get mutations on crafted units?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ACCESS GRANTED</div>
+            Yes. Ensure that the active inventory unit selected inside the crafting ingredient terminal already holds a mutation; that property maps directly onto the crafted output unit.
+          </div>
+        </div>
+      </div>
+
+      <!-- Q16 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
+        <button class="faq-question">
+          <span class="question-text">16. How to get Mutations on units?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            You cannot manually attach mutations to units as of right now. You must wait for a mutation event to go live, and then roll for a chance to obtain a mutated unit.
+          </div>
+        </div>
+      </div>
+
+      <!-- Q17 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> ACCESSING RECORD...</span>
+        <button class="faq-question">
+          <span class="question-text">17. How to get limiteds?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            You currently cannot obtain any limiteds aside from <span class="highlight">Son Wukong</span> (via BP) and <span class="highlight">Lelouch</span> (Buyable Next to Saitama Group Rewards).
+          </div>
+        </div>
+      </div>
+
+      <!-- Q18 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> RETRIEVING DATA...</span>
+        <button class="faq-question">
+          <span class="question-text">18. What i supposed to do with Hollow mask, Maraga Wheels and Hogyoku Fragment?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ACCESS GRANTED</div>
+            They're used for crafting, right next to the Leaderboards.
+          </div>
+        </div>
+      </div>
+
+      <!-- Q19 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
+        <button class="faq-question">
+          <span class="question-text">19. How to get image perms?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            Get <span class="accent">level 5+</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q20 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
+        <button class="faq-question">
+          <span class="question-text">20. I rolled Hashirama from the wheel but i got no mutation is that a bug?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            No its not a bug, there is a <span class="highlight">50% chance</span> to get a random mutation, meaning you got unlucky while also being lucky enough to roll a Hashirama.
+          </div>
+        </div>
+      </div>
+
+      <!-- Q21 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> ACCESSING RECORD...</span>
+        <button class="faq-question">
+          <span class="question-text">21. How do I level up my Unit?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            Level up your unit by placing the unit down and stacking the exact same unit ontop of the placed unit <span class="alert">(Must be same Mutation)</span>.
+          </div>
+        </div>
+      </div>
+
+      <!-- Q22 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> RETRIEVING DATA...</span>
+        <button class="faq-question">
+          <span class="question-text">22. Does the trait of my Unit stay when i level it up?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ACCESS GRANTED</div>
+            It depends on how you do it. If you placed the traitless unit down in your base and stacked the unit with the trait ontop of the traitless unit, you're guaranteed to lose the trait because <span class="highlight">you're supposed to put the trait unit down and stack the traitless ontop</span>, not the other way around!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- --- TERMINAL SCRIPT CORE --- -->
+  <script>
+    // --- ACCORDION SYSTEM ---
+    const questions = document.querySelectorAll('.faq-question');
+    questions.forEach(question => {
+      question.addEventListener('click', () => {
+        const item = question.parentElement;
+        const answer = item.querySelector('.faq-answer');
+        
+        document.querySelectorAll('.faq-item').forEach(activeItem => {
+          if (activeItem !== item) {
+            activeItem.classList.remove('active');
+            activeItem.querySelector('.faq-answer').style.maxHeight = null;
+          }
+        });
+
+        item.classList.toggle('active');
+        if (item.classList.contains('active')) {
+          answer.style.maxHeight = answer.scrollHeight + "px";
+        } else {
+          answer.style.maxHeight = null;
+        }
+      });
+    });
+
+    // --- LIVE SEARCH FILTER ENGINE ---
+    const searchInput = document.getElementById('vault-search');
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      
+      faqItems.forEach(item => {
+        const questionText = item.querySelector('.question-text').textContent.toLowerCase();
+        const answerText = item.querySelector('.faq-answer-inner').textContent.toLowerCase();
+        
+        // Match checking
+        if (questionText.includes(query) || answerText.includes(query)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+
+    // --- SECURE COPY DISCORD HANDLE ---
+    const copyBtn = document.getElementById('secure-copy-trigger');
+    const copyToast = document.getElementById('secure-copy-toast');
+    
+    copyBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigator.clipboard.writeText('sofiiluvz_').then(() => {
+        copyToast.style.opacity = '1';
+        setTimeout(() => {
+          copyToast.style.opacity = '0';
+        }, 1500);
+      });
+    });
+
+    // --- DYNAMIC SECRET OVERWRITE PROTOCOL (EASTER EGG CORE) ---
+    let titleClickCounter = 0;
+    const interactiveTitle = document.getElementById('vault-interactive-title');
+    const overrideOverlay = document.getElementById('operator-override-terminal');
+    const streamPayload = document.getElementById('override-stream-payload');
+    const closeOverrideBtn = document.getElementById('secure-close-override');
+
+    const redactionLogs = [
+      ">> SECURE OVERWRITE DETECTED...",
+      ">> BYPASSING ARCHIVE FIREWALLS... SUCCESS.",
+      ">> ACCESS LEVEL ELEVATED",
+      ">> WELCOME, OPERATOR.",
+      ">> ---------------------------------------------",
+      ">> SYSTEM STATUS: UNRESTRICTED MODE ACTIVE",
+      ">> ENCRYPTED GEOMETRY NODE: SECTOR 09 SECURED",
+      ">> PARSING QUANTUM MANIFESTS...",
+      ">> CRITICAL EXPLOIT: CONFIG BUFFER OVERRUN CLEARED",
+      ">> PROJECT CODENAME: NIGHTFALL DECRYPTED",
+      ">> OPERATOR RIGHTS GRANTED. STANDBY FOR AGENT DIRECTIVE..."
+    ];
+
+    interactiveTitle.addEventListener('click', () => {
+      titleClickCounter++;
+      if (titleClickCounter >= 5) {
+        titleClickCounter = 0;
+        executeOverrideProtocol();
+      }
+    });
+
+    function executeOverrideProtocol() {
+      overrideOverlay.style.display = 'flex';
+      streamPayload.innerHTML = '';
+      let logIndex = 0;
+
+      function typeLogLine() {
+        if (logIndex < redactionLogs.length) {
+          const line = document.createElement('div');
+          line.style.marginBottom = '6px';
+          line.style.textShadow = '0 0 8px var(--cyan)';
+          line.textContent = redactionLogs[logIndex];
+          streamPayload.appendChild(line);
+          logIndex++;
+          setTimeout(typeLogLine, 250);
+        }
+      }
+      typeLogLine();
+    }
+
+    closeOverrideBtn.addEventListener('click', () => {
+      overrideOverlay.style.display = 'none';
+    });
+
+    // --- CANVAS ENGINE (PARTICLES & MESHES) ---
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let particles = [];
+    const particleCount = 45;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = (Math.random() - 0.5) * 0.25;
+        this.speedY = (Math.random() - 0.5) * 0.25;
+        this.alpha = Math.random() * 0.5 + 0.1;
+        this.fade = Math.random() * 0.005 + 0.002;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.alpha -= this.fade;
+        if (this.alpha <= 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+          this.reset();
+        }
+      }
+      draw() {
+        ctx.fillStyle = `rgba(0, 225, 255, ${this.alpha})`;
+        if (Math.random() > 0.4) {
+          ctx.fillRect(this.x, this.y, this.size, this.size); 
+        } else {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) { particles.push(new Particle()); }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = 'rgba(0, 229, 255, 0.015)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+          if (dist < 130) {
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+          }
+        }
+      }
+      ctx.stroke();
+
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // --- SYSTEM BACKGROUND RANDOM ACTIVITY LOGS ---
+    const logs = [
+      "Security sweep complete",
+      "Access logs updated",
+      "Data validation complete",
+      "Session integrity confirmed",
+      "Archive synchronized",
+      "Sub-routing connection safe",
+      "Clearing interface buffers",
+      "Enforcing encryption standards"
+    ];
+    const logFeed = document.getElementById('log-feed');
+
+    setInterval(() => {
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      const randomMsg = logs[Math.floor(Math.random() * logs.length)];
+      
+      const newLog = document.createElement('div');
+      newLog.className = 'log-line';
+      newLog.textContent = `[${timeStr}] ${randomMsg}`;
+      
+      logFeed.appendChild(newLog);
+      if (logFeed.children.length > 4) {
+        logFeed.removeChild(logFeed.children[0]);
+      }
+    }, 4500);
+  </script>
+</body>
+</html>
