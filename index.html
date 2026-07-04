@@ -161,7 +161,7 @@
     .hud-bl { bottom: 20px; left: 20px; border-radius: 0 4px 0 0; }
     .hud-br { bottom: 20px; right: 20px; border-radius: 4px 0 0 0; }
 
-    /* --- DISCORD LINK INTEGRATION CONFIG --- */
+    /* --- TIMERS & DISCORD SUB-PANELS --- */
     .discord-sublink {
       display: flex;
       align-items: center;
@@ -173,38 +173,30 @@
       letter-spacing: 1px;
       color: var(--text-white);
     }
-    .discord-logo-svg {
-      color: var(--cyan);
-      fill: currentColor;
-      flex-shrink: 0;
-    }
+    .discord-logo-svg { color: var(--cyan); fill: currentColor; flex-shrink: 0; }
     .copy-btn-node {
-      background: transparent;
-      border: none;
-      color: var(--cyan);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2px;
-      transition: color 0.2s, transform 0.1s;
+      background: transparent; border: none; color: var(--cyan); display: inline-flex;
+      align-items: center; justify-content: center; padding: 2px; transition: color 0.2s, transform 0.1s;
     }
-    .copy-btn-node:hover {
-      color: var(--text-white);
-    }
-    .copy-btn-node:active {
-      transform: scale(0.9);
-    }
+    .copy-btn-node:hover { color: var(--text-white); }
+    .copy-btn-node:active { transform: scale(0.9); }
     .copy-toast {
-      font-size: 8px;
-      color: var(--bg-deep);
-      background: var(--cyan);
-      padding: 1px 4px;
-      font-weight: bold;
-      border-radius: 1px;
-      opacity: 0;
-      transition: opacity 0.2s;
-      pointer-events: none;
+      font-size: 8px; color: var(--bg-deep); background: var(--cyan); padding: 1px 4px;
+      font-weight: bold; border-radius: 1px; opacity: 0; transition: opacity 0.2s; pointer-events: none;
     }
+
+    .timer-panel {
+      border-top: 1px dashed rgba(0, 229, 255, 0.25);
+      margin-top: 4px;
+      padding-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .timer-group { display: flex; flex-direction: column; gap: 2px; }
+    .timer-label { font-size: 9px; color: var(--text-muted); letter-spacing: 1px; }
+    .timer-value { font-size: 12px; color: var(--cyan); font-weight: bold; letter-spacing: 2px; text-shadow: 0 0 8px rgba(0,229,255,0.3); }
+    .timer-local { font-size: 8px; color: rgba(255,255,255,0.4); letter-spacing: 1px; margin-top: -1px; }
 
     /* --- BACKGROUND LOG FEED --- */
     .terminal-feed {
@@ -261,20 +253,9 @@
       position: relative;
       box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.2);
     }
-
-    .terminal-panel-wrapper::before {
-      content: '■'; position: absolute; left: -6px; top: 50%; transform: translateY(-50%); color: var(--cyan); font-size: 10px;
-    }
-    .terminal-panel-wrapper::after {
-      content: '■'; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); color: var(--cyan); font-size: 10px;
-    }
-
-    .badge {
-      color: var(--cyan);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
+    .terminal-panel-wrapper::before { content: '■'; position: absolute; left: -6px; top: 50%; transform: translateY(-50%); color: var(--cyan); font-size: 10px; }
+    .terminal-panel-wrapper::after { content: '■'; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); color: var(--cyan); font-size: 10px; }
+    .badge { color: var(--cyan); font-size: 12px; text-transform: uppercase; letter-spacing: 2px; }
 
     /* --- SEARCH TERMINAL ENGINE --- */
     .search-terminal {
@@ -290,263 +271,96 @@
       transition: all 0.3s ease;
       backdrop-filter: blur(5px);
     }
-
-    .search-terminal:focus-within {
-      border-color: var(--cyan);
-      box-shadow: 0 0 20px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(0, 229, 255, 0.1);
-    }
-
-    .search-prompt {
-      color: var(--accent-purple);
-      font-size: 14px;
-      font-weight: 700;
-      white-space: nowrap;
-      user-select: none;
-    }
-
-    #vault-search {
-      flex-grow: 1;
-      background: transparent;
-      border: none;
-      color: var(--text-white);
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    #vault-search::placeholder {
-      color: rgba(0, 229, 255, 0.25);
-    }
-
-    .blinking-cursor {
-      display: inline-block;
-      width: 10px;
-      height: 18px;
-      background-color: var(--cyan);
-      animation: terminalBlink 1s step-end infinite;
-    }
-
-    @keyframes terminalBlink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
+    .search-terminal:focus-within { border-color: var(--cyan); box-shadow: 0 0 20px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(0, 229, 255, 0.1); }
+    .search-prompt { color: var(--accent-purple); font-size: 14px; font-weight: 700; white-space: nowrap; user-select: none; }
+    #vault-search { flex-grow: 1; background: transparent; border: none; color: var(--text-white); font-family: inherit; font-size: 14px; outline: none; text-transform: uppercase; letter-spacing: 1px; }
+    #vault-search::placeholder { color: rgba(0, 229, 255, 0.25); }
+    .blinking-cursor { display: inline-block; width: 10px; height: 18px; background-color: var(--cyan); animation: terminalBlink 1s step-end infinite; }
+    @keyframes terminalBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
     /* --- FAQ CARDS --- */
-    .faq-wrapper {
-      margin-top: 20px;
-    }
-
+    .faq-wrapper { margin-top: 20px; }
     .faq-item {
-      background: rgba(5, 10, 20, 0.75);
-      border: 1px solid rgba(0, 229, 255, 0.15);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      margin-bottom: 18px;
-      position: relative;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      background: rgba(5, 10, 20, 0.75); border: 1px solid rgba(0, 229, 255, 0.15); backdrop-filter: blur(8px);
+      margin-bottom: 18px; position: relative; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       box-shadow: inset 0 0 12px rgba(0, 229, 255, 0.02);
     }
-
     .faq-item:hover {
-      border-color: var(--cyan);
-      background: rgba(8, 17, 31, 0.9);
-      transform: translateY(-2px);
+      border-color: var(--cyan); background: rgba(8, 17, 31, 0.9); transform: translateY(-2px);
       box-shadow: 0 5px 20px rgba(0, 229, 255, 0.1), inset 0 0 15px rgba(0, 229, 255, 0.05);
     }
-
-    .faq-item.active {
-      border-color: var(--cyan);
-      background: rgba(5, 10, 20, 0.95);
-      box-shadow: 0 0 25px rgba(0, 229, 255, 0.15);
-    }
-
+    .faq-item.active { border-color: var(--cyan); background: rgba(5, 10, 20, 0.95); box-shadow: 0 0 25px rgba(0, 229, 255, 0.15); }
     .hover-status-line {
-      position: absolute;
-      top: -10px;
-      left: 15px;
-      font-size: 9px;
-      color: var(--cyan);
-      background: var(--bg-deep);
-      padding: 0 6px;
-      opacity: 0;
-      transform: translateY(3px);
-      transition: all 0.2s ease;
-      pointer-events: none;
-      letter-spacing: 1px;
+      position: absolute; top: -10px; left: 15px; font-size: 9px; color: var(--cyan);
+      background: var(--bg-deep); padding: 0 6px; opacity: 0; transform: translateY(3px);
+      transition: all 0.2s ease; pointer-events: none; letter-spacing: 1px;
     }
-
-    .faq-item:hover .hover-status-line {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
+    .faq-item:hover .hover-status-line { opacity: 1; transform: translateY(0); }
     .faq-question {
-      width: 100%;
-      background: transparent;
-      border: none;
-      color: #f4f4f5;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 700;
-      text-align: left;
-      padding: 22px 26px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
+      width: 100%; background: transparent; border: none; color: #f4f4f5; font-family: inherit;
+      font-size: 14px; font-weight: 700; text-align: left; padding: 22px 26px; display: flex;
+      justify-content: space-between; align-items: center; gap: 20px;
     }
-
-    .question-text {
-      letter-spacing: 0.5px;
-    }
-
-    .icon {
-      font-size: 14px;
-      color: var(--cyan);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .faq-item.active .icon {
-      transform: rotate(90deg);
-      color: var(--text-white);
-    }
-
-    .faq-answer {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .faq-answer-inner {
-      padding: 0 26px 26px 26px;
-      font-size: 13.5px;
-      color: var(--text-muted);
-      border-top: 1px dashed rgba(0, 229, 255, 0.15);
-      padding-top: 18px;
-    }
-
-    .verified-banner {
-      font-size: 10px;
-      color: var(--cyan);
-      letter-spacing: 2px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      opacity: 0.8;
-    }
-    .verified-banner::before {
-      content: '●';
-      animation: blink 1s infinite;
-    }
-
+    .question-text { letter-spacing: 0.5px; }
+    .icon { font-size: 14px; color: var(--cyan); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .faq-item.active .icon { transform: rotate(90deg); color: var(--text-white); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    .faq-answer-inner { padding: 0 26px 26px 26px; font-size: 13.5px; color: var(--text-muted); border-top: 1px dashed rgba(0, 229, 255, 0.15); padding-top: 18px; }
+    
+    .verified-banner { font-size: 10px; color: var(--cyan); letter-spacing: 2px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; opacity: 0.8; }
+    .verified-banner::before { content: '●'; animation: blink 1s infinite; }
     @keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
     /* --- EMBEDDED ORIGINAL DATA CLASS STYLES --- */
     ul, ol { margin-top: 10px; padding-left: 20px; }
     li { margin-bottom: 8px; }
     strong { color: #f4f4f5; }
-    
     .highlight { color: var(--cyan); font-weight: 700; text-shadow: 0 0 10px rgba(0,229,255,0.2); }
     .accent { color: var(--accent-purple); font-weight: 700; }
     .alert { color: var(--alert-red); font-weight: 700; }
-
     .formula {
-      background: #040811;
-      border: 1px solid rgba(0, 229, 255, 0.2);
-      color: var(--cyan);
-      padding: 12px 18px;
-      margin-top: 12px;
-      display: inline-block;
-      font-size: 12px;
-      border-radius: 2px;
+      background: #040811; border: 1px solid rgba(0, 229, 255, 0.2); color: var(--cyan);
+      padding: 12px 18px; margin-top: 12px; display: inline-block; font-size: 12px; border-radius: 2px;
       box-shadow: inset 0 0 8px rgba(0,229,255,0.1);
     }
-    .formula::before {
-      content: "$ ";
-      color: #4b5563;
-    }
-
-    .mutation-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-    }
+    .formula::before { content: "$ "; color: #4b5563; }
+    
+    .mutation-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
     .mutation-pill {
-      background: #040811;
-      border: 1px solid rgba(0, 229, 255, 0.1);
-      border-radius: 2px;
-      padding: 8px 14px;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      background: #040811; border: 1px solid rgba(0, 229, 255, 0.1); border-radius: 2px;
+      padding: 8px 14px; font-size: 11px; display: flex; align-items: center; gap: 8px;
     }
-    .mutation-pill .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
+    .mutation-pill .dot { width: 6px; height: 6px; border-radius: 50%; }
     .mutation-pill .label { font-weight: 700; color: #e4e4e7; }
     .mutation-pill .value { color: #71717a; }
 
     .dot-gold { background: #fbbf24; box-shadow: 0 0 8px #fbbf24; }
     .dot-diamond { background: #22d3ee; box-shadow: 0 0 8px #22d3ee; }
-    .dot-dragonborne { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+    .dot-dragon { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
     .dot-beast { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
     .dot-titan { background: #a8a29e; box-shadow: 0 0 8px #a8a29e; }
     .dot-arrancar { background: #c084fc; box-shadow: 0 0 8px #c084fc; }
+    .dot-quincy { background: #bae6fd; box-shadow: 0 0 8px #bae6fd; }
     .dot-nen { background: #fde047; box-shadow: 0 0 8px #fde047; }
+    .dot-supershenron { background: #ffb300; box-shadow: 0 0 8px #ffb300; }
     .dot-admin { background: #10b981; box-shadow: 0 0 8px #10b981; }
 
     /* --- CLASSIFIED EASTER EGG OVERLAY OVERRIDE --- */
     #operator-override-terminal {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(2, 4, 8, 0.98);
-      z-index: 10000;
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 40px;
-      box-shadow: inset 0 0 100px rgba(0, 229, 255, 0.3);
-      border: 4px solid var(--cyan);
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(2, 4, 8, 0.98);
+      z-index: 10000; display: none; flex-direction: column; justify-content: center; align-items: center;
+      padding: 40px; box-shadow: inset 0 0 100px rgba(0, 229, 255, 0.3); border: 4px solid var(--cyan);
     }
     .override-box {
-      width: 100%;
-      max-width: 700px;
-      background: #03070e;
-      border: 1px solid var(--cyan);
-      padding: 30px;
-      position: relative;
-      box-shadow: 0 0 40px rgba(0, 229, 255, 0.15);
+      width: 100%; max-width: 700px; background: #03070e; border: 1px solid var(--cyan); padding: 30px;
+      position: relative; box-shadow: 0 0 40px rgba(0, 229, 255, 0.15);
     }
-    .override-stream {
-      font-size: 13px;
-      color: var(--cyan);
-      line-height: 1.8;
-      min-height: 220px;
-    }
+    .override-stream { font-size: 13px; color: var(--cyan); line-height: 1.8; min-height: 220px; }
     .close-override-cmd {
-      margin-top: 25px;
-      background: transparent;
-      border: 1px dashed var(--cyan);
-      color: var(--cyan);
-      padding: 8px 16px;
-      font-family: inherit;
-      font-size: 11px;
-      letter-spacing: 2px;
-      transition: all 0.2s;
+      margin-top: 25px; background: transparent; border: 1px dashed var(--cyan); color: var(--cyan);
+      padding: 8px 16px; font-family: inherit; font-size: 11px; letter-spacing: 2px; transition: all 0.2s;
     }
-    .close-override-cmd:hover {
-      background: var(--cyan);
-      color: var(--bg-deep);
-      box-shadow: 0 0 15px var(--cyan);
-    }
+    .close-override-cmd:hover { background: var(--cyan); color: var(--bg-deep); box-shadow: 0 0 15px var(--cyan); }
   </style>
 </head>
 <body>
@@ -590,10 +404,23 @@
       </button>
       <span class="copy-toast" id="secure-copy-toast">COPIED</span>
     </div>
+    <!-- LIVE TIMERS INTEGRATION -->
+    <div class="timer-panel">
+      <div class="timer-group">
+        <div class="timer-label">> NEXT SUPERSHENRON</div>
+        <div class="timer-value" id="shenron-timer">00:00:00</div>
+        <div class="timer-local" id="shenron-local">LOCAL: --:-- (Automatically converted to your timezone)</div>
+      </div>
+      <div class="timer-group">
+        <div class="timer-label">> NEXT UPDATE</div>
+        <div class="timer-value" id="update-timer" style="color: var(--accent-purple);">00 : 00 : 00 : 00</div>
+        <div class="timer-local" id="update-local">TARGET: TBD (Automatically converted to your timezone)</div>
+      </div>
+    </div>
   </div>
 
   <div class="hud-panel hud-bl">SECURITY LEVEL: MAXIMUM</div>
-  <div class="hud-panel hud-br">ARCHIVE BUILD v4.3</div>
+  <div class="hud-panel hud-br">ARCHIVE BUILD v5.1</div>
 
   <!-- AMBIENT TERMINAL ACTIVITY ENGINE -->
   <div class="terminal-feed" id="log-feed">
@@ -624,6 +451,7 @@
     <!-- SEARCH TERMINAL -->
     <div class="search-terminal">
       <span class="search-prompt">root@vault:~#</span>
+      <span style="font-size: 14px; opacity: 0.8;">🔍</span>
       <input type="text" id="vault-search" placeholder="TYPE HERE TO SEARCH...">
       <span class="blinking-cursor"></span>
     </div>
@@ -641,7 +469,7 @@
         <div class="faq-answer">
           <div class="faq-answer-inner">
             <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
-            <span class="highlight">Wave 75.</span> You earn cash and exp right away from wave 75. It might not look like a lot initially, but it quickly accumulates into significant progress over multiple runs, due to the fact that the higher the wave, the more you earn.
+            <span class="highlight">Wave 0.</span> You earn cash and exp right away from wave 75. It might not look like a lot initially, but it quickly accumulates into significant progress over multiple runs, due to the fact that the higher the wave, the more you earn.
           </div>
         </div>
       </div>
@@ -674,7 +502,7 @@
         <div class="faq-answer">
           <div class="faq-answer-inner">
             <div class="verified-banner">ACCESS GRANTED</div>
-            Every <span class="accent">Saturday at 10 PM UTC+8</span> (Philippine Standard Time).
+            Every <span class="accent">Saturday at 10 PM UTC+8</span> (Philippine Standard Time, refer to the timer at the top).
           </div>
         </div>
       </div>
@@ -694,7 +522,7 @@
         </div>
       </div>
 
-<!-- Q5 -->
+      <!-- Q5 UPDATED -->
       <div class="faq-item">
         <span class="hover-status-line">> SCANNING POWER LEVELS...</span>
         <button class="faq-question">
@@ -703,14 +531,14 @@
         </button>
         <div class="faq-answer">
           <div class="faq-answer-inner">
-            <div class="verified-banner">DATA STREAM COMPEDITIVE METRICS</div>
+            <div class="verified-banner">DATA STREAM COMPETITIVE METRICS</div>
             <div style="line-height: 1.6;">
-              • <span class="highlight">Gon</span> — Purchasable on Hero Summons in the Shop<br>
+              • <span class="highlight">Boorus</span> — Obtained by defeating Boorus and rolling his wheel (0.1% chance). Also Rollable (50% Random mutation when rolling his Wheel).<br>
+              • <span class="highlight">Gon</span> — Obtained By Rolling in Hero Summons in the Shop<br>
               • <span class="highlight">Kaido</span> — Obtained by Rolling<br>
+              • <span class="highlight">MUI Gukou</span> — Obtained by Rolling<br>
               • <span class="highlight">Sukuna (Final)</span> — Crafted<br>
-              • <span class="highlight">Hashirama</span> — Via Spin Wheel in the center of the Map<br>
-              • <span class="highlight">Lelouch</span> — Purchasable next to Gold Saitama group rewards<br>
-              • <span class="highlight">God Aizen</span> — Crafted
+              • <span class="highlight">Orange Pikolo</span> — Crafted
             </div>
           </div>
         </div>
@@ -720,7 +548,7 @@
       <div class="faq-item">
         <span class="hover-status-line">> RETRIEVING DATA...</span>
         <button class="faq-question">
-          <span class="question-text">6. What is acc damage?</span>
+          <span class="question-text">6. What is Acc Damage?</span>
           <span class="icon">▶</span>
         </button>
         <div class="faq-answer">
@@ -788,7 +616,7 @@
         </div>
       </div>
 
-      <!-- Q10 -->
+      <!-- Q10 UPDATED -->
       <div class="faq-item">
         <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
         <button class="faq-question">
@@ -801,12 +629,14 @@
             <div class="mutation-grid">
               <div class="mutation-pill"><span class="dot dot-gold"></span><span class="label">Gold</span><span class="value">1.5x Dmg / 2x Cost</span></div>
               <div class="mutation-pill"><span class="dot dot-diamond"></span><span class="label">Diamond</span><span class="value">2.5x Dmg / 5x Cost</span></div>
-              <div class="mutation-pill"><span class="dot dot-dragonborne"></span><span class="label">Dragonborn</span><span class="value">3.5x Dmg / 10x Cost</span></div>
+              <div class="mutation-pill"><span class="dot dot-dragon"></span><span class="label">Dragonborn</span><span class="value">3.5x Dmg / 10x Cost</span></div>
               <div class="mutation-pill"><span class="dot dot-beast"></span><span class="label">Beast</span><span class="value">4.5x Dmg / 12.5x Cost</span></div>
               <div class="mutation-pill"><span class="dot dot-titan"></span><span class="label">Titan</span><span class="value">5x Dmg / 13.5x Cost</span></div>
               <div class="mutation-pill"><span class="dot dot-arrancar"></span><span class="label">Arrancar</span><span class="value">5.5x Dmg / 15x Cost</span></div>
-              <div class="mutation-pill"><span class="dot dot-nen"></span><span class="label">Nen</span><span class="value">6.5x Dmg / 17.5x Cost</span></div>
-              <div class="mutation-pill" style="border-color: rgba(16, 185, 129, 0.3);"><span class="dot dot-admin"></span><span class="label">Admin</span><span class="value">7x Dmg / No Cost / Unclonable</span></div>
+              <div class="mutation-pill"><span class="dot dot-quincy"></span><span class="label">Quincy</span><span class="value">6.25x Dmg / 20x Cost</span></div>
+              <div class="mutation-pill"><span class="dot dot-nen"></span><span class="label">Nen</span><span class="value">6.6x Dmg / 17.5x Cost</span></div>
+              <div class="mutation-pill"><span class="dot dot-supershenron"></span><span class="label">SuperShenron</span><span class="value">7.5x Dmg / 22x Cost</span></div>
+              <div class="mutation-pill" style="border-color: rgba(16, 185, 129, 0.3);"><span class="dot dot-admin"></span><span class="label">Admin</span><span class="value">8x Dmg / No Cost / Unclonable</span></div>
             </div>
           </div>
         </div>
@@ -839,17 +669,17 @@
             <div class="verified-banner">ACCESS GRANTED</div>
             (this varies depending on what the Dev chooses to do) It typically includes:
             <ul>
-              <li>2x Cash Drop and 2x Roll Luck.</li>
+              <li>2x and 3x Cash Drop and 2x,3x,and 6x Roll Luck.</li>
               <li>Rolling cap shifts directly from 3 pods up to 6 active pods.</li>
-              <li>Lots of Nen events.</li>
-              <li>Admin Mutation events (7x drop values, Best Mutation).</li>
-              <li>Instant clone timeskips alongside free spins and fragments.</li>
+              <li>Nen events, Supershenrons, and the newly added events.</li>
+              <li>Admin Mutation events (8x drop values, Best Mutation).</li>
+              <li>Instant clone and craft timeskips alongside free spins and fragments.</li>
             </ul>
           </div>
         </div>
       </div>
 
-      <!-- Q13 -->
+      <!-- Q13 UPDATED -->
       <div class="faq-item">
         <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
         <button class="faq-question">
@@ -860,18 +690,18 @@
           <div class="faq-answer-inner">
             <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
             <ul>
-              <li><strong>Max Luck:</strong> 13x</li>
+              <li><strong>Max Luck:</strong> 13x (26x with gp's)</li>
               <li><strong>Max Cash:</strong> 3.4x</li>
             </ul>
           </div>
         </div>
       </div>
 
-    <!-- Q14 -->
+      <!-- Q14 UPDATED -->
       <div class="faq-item">
         <span class="hover-status-line">> COMPUTING DPS ARCHIVES...</span>
         <button class="faq-question">
-          <span class="question-text">14. Best crafts in order</span>
+          <span class="question-text">14. What are the best crafts in order?</span>
           <span class="icon">▶</span>
         </button>
         <div class="faq-answer">
@@ -879,10 +709,11 @@
             <div class="verified-banner">FORGE MATRIX READOUT</div>
             <div style="line-height: 1.6;">
               1. <span class="highlight">Sukuna (Final)</span> — <span class="alert">5.1k DPS</span><br>
-              2. <span class="highlight">God Aizen</span> — 3.1k DPS<br>
-              3. <span class="highlight">Mahoraga</span> — 3k DPS <span class="alert">(BETTER RNG 60)</span><br>
-              4. <span class="highlight">Kenpachi</span> — 3k DPS <span class="alert">(RNG 40)</span><br>
-              5. <span class="highlight">Ichigo</span> — 1.8k DPS
+              2. <span class="highlight">Orange Pikolo</span> — 4.95k DPS<br>
+              3. <span class="highlight">God Aizen</span> — 3.2k DPS<br>
+              4. <span class="highlight">Mahoraga</span> — 3k DPS<br>
+              5. <span class="highlight">Kenpachi</span> — 2750 DPS<br>
+              6. <span class="highlight">Ichigo</span> — 1.8k DPS
             </div>
           </div>
         </div>
@@ -898,7 +729,7 @@
         <div class="faq-answer">
           <div class="faq-answer-inner">
             <div class="verified-banner">ACCESS GRANTED</div>
-            Yes. Ensure that the active inventory unit selected inside the crafting ingredient terminal already holds a mutation; that property maps directly onto the crafted output unit.
+            Yes. Ensure that the active inventory unit selected inside the crafting already holds a mutation; that property maps directly onto the crafted output unit. So for example, you use a Nen Megumi, if you craft it, you get a Nen Mahoraga
           </div>
         </div>
       </div>
@@ -918,17 +749,17 @@
         </div>
       </div>
 
-      <!-- Q17 -->
+      <!-- Q17 UPDATED -->
       <div class="faq-item">
-        <span class="hover-status-line">> ACCESSING RECORD...</span>
+        <span class="hover-status-line">> LOADING RESTRICTED DATABASE...</span>
         <button class="faq-question">
           <span class="question-text">17. How to get limiteds?</span>
           <span class="icon">▶</span>
         </button>
         <div class="faq-answer">
           <div class="faq-answer-inner">
-            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
-            You currently cannot obtain any limiteds aside from <span class="highlight">Son Wukong</span> (via BP) and <span class="highlight">Lelouch</span> (Buyable Next to Saitama Group Rewards).
+            <div class="verified-banner">RESTRICTED ACQUISITION LOG</div>
+            You currently cannot obtain any limiteds aside from <span class="highlight">Goku Black</span> (via BP) and <span class="highlight">Jiren</span> (Buyable Next to Saitama Group Rewards).
           </div>
         </div>
       </div>
@@ -967,7 +798,7 @@
       <div class="faq-item">
         <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
         <button class="faq-question">
-          <span class="question-text">20. I rolled Hashirama from the wheel but i got no mutation is that a bug?</span>
+          <span class="question-text">20. I rolled Hashirama from the wheel but i got no mutation, is that a bug?</span>
           <span class="icon">▶</span>
         </button>
         <div class="faq-answer">
@@ -982,7 +813,7 @@
       <div class="faq-item">
         <span class="hover-status-line">> ACCESSING RECORD...</span>
         <button class="faq-question">
-          <span class="question-text">21. How do I level up my Unit?</span>
+          <span class="question-text">21. How do I level up my Units?</span>
           <span class="icon">▶</span>
         </button>
         <div class="faq-answer">
@@ -1007,6 +838,194 @@
           </div>
         </div>
       </div>
+      
+      <!-- Q23 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> SCANNING PROMOTIONAL LOGS...</span>
+        <button class="faq-question">
+          <span class="question-text">23. What are the current active codes?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            Here are the currently active codes:<br><br>
+            <ul style="margin-top: 0;">
+              <li><span class="highlight">JJKUPDATE</span></li>
+              <li><span class="highlight">NEWTRAIT</span></li>
+              <li><span class="highlight">QUINCY</span></li>
+              <li><span class="highlight">SORRYUPDATE</span></li>
+              <li><span class="highlight">ADMINFIX</span></li>
+              <li><span class="highlight">SUPERMAKEUP</span></li>
+              <li><span class="highlight">BUGFIXESS</span></li>
+              <li><span class="highlight">BUGFIXESS2</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q24 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
+        <button class="faq-question">
+          <span class="question-text">24. How much do you need of one unit to level up, and Whats the Max?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            <ul>
+              <li><span class="highlight">Level 2:</span> 2 copies</li>
+              <li><span class="highlight">Level 3:</span> 4 copies</li>
+              <li><span class="highlight">Level 4:</span> 8 copies</li>
+              <li><span class="highlight">Level 5:</span> 16 copies</li>
+              <li><span class="highlight">Level 6:</span> 32 copies</li>
+              <li><span class="highlight">Level 7:</span> 64 copies <span class="alert">(MAX)</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q25 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> ACCESSING NETWORK PORTAL...</span>
+        <button class="faq-question">
+          <span class="question-text">25. Whats the link to the wiki?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ACCESS GRANTED</div>
+            You can access the external database here:<br>
+            <a href="https://locky-evolve.vercel.app/" target="_blank" style="color: var(--cyan); text-decoration: none; border-bottom: 1px solid var(--cyan); margin-top: 8px; display: inline-block;">locky-evolve.vercel.app</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q26 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> RETRIEVING DATA...</span>
+        <button class="faq-question">
+          <span class="question-text">26. Do I keep my battlepass coins when it gets updated?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            No, you lose your coins upon a new battlepass.
+          </div>
+        </div>
+      </div>
+
+      <!-- Q27 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> SCANNING SECURITY PROTOCOLS...</span>
+        <button class="faq-question">
+          <span class="question-text">27. Can i trade units for Robux or Gamepasses?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">SECURITY PROTOCOL WARNING</div>
+            <span class="alert">No.</span> Trading units for Robux, gamepasses, or anything external is strictly forbidden, as it violates Roblox Terms of Service.
+            <br><br>
+            Anyone caught doing this may receive a server ban, and in more serious cases, further action may be taken against their in-game account. 🐧 *(Copy and pasted from sub-announcements)*
+          </div>
+        </div>
+      </div>
+
+      <!-- Q28 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
+        <button class="faq-question">
+          <span class="question-text">28. My units are locked how do I unlock them?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            Click the big lock on the top middle of your menu to enter Locking mode, click the smaller locks under each unit to lock/unlock them shown by the lock being closed or open. Once your done just click the big lock at the top of the inv menu to leave lock mode.
+          </div>
+        </div>
+      </div>
+
+      <!-- Q29 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> ACCESSING RECORD...</span>
+        <button class="faq-question">
+          <span class="question-text">29. Do you lose your current roll when you leave the game?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            Yes you lose your current roll, but <span class="highlight">not</span> your Pity.
+          </div>
+        </div>
+      </div>
+
+      <!-- Q30 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> RETRIEVING DATA...</span>
+        <button class="faq-question">
+          <span class="question-text">30. How do I AFK overnight without disconnecting?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ACCESS GRANTED</div>
+            Use an autoclicker or a Macro to afk. 
+            <br><br>
+            • <strong>PC:</strong> OP Autoclicker from Microsoft Store.<br>
+            • <strong>Android:</strong> Auto Clicker - Automatic Tap (by True Developers Studio) in the Play Store.
+          </div>
+        </div>
+      </div>
+
+      <!-- Q31 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> SCANNING EVENT SCHEDULE...</span>
+        <button class="faq-question">
+          <span class="question-text">31. What is the schedule for events?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            <ul>
+              <li><span class="highlight">xx:00</span> Hunter Exam</li>
+              <li><span class="highlight">xx:15</span> Dragonborn 50/50 Titan</li>
+              <li><span class="highlight">xx:30</span> Beast</li>
+              <li><span class="highlight">xx:45</span> Arrancar / Quincy</li>
+            </ul>
+            <br>
+            And then every <span class="accent">3 hours</span> is SuperShenron. *(Check the Live Tracker in the top right corner!)*
+            
+            <div style="margin-top: 18px; padding: 14px; background: rgba(2, 4, 8, 0.6); border: 1px dashed rgba(0, 229, 255, 0.2); border-radius: 4px;">
+              <div id="shenron-tz-label" style="font-size: 10px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase;">> SPAWN SCHEDULE (LOCAL):</div>
+              <div id="shenron-times-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 12px; text-align: center; color: var(--cyan);">
+                 <!-- Populated dynamically by JS based on user timezone -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q32 -->
+      <div class="faq-item">
+        <span class="hover-status-line">> DECRYPTING ARCHIVE...</span>
+        <button class="faq-question">
+          <span class="question-text">32. What are the vip rewards?</span>
+          <span class="icon">▶</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="verified-banner">ARCHIVE ENTRY VERIFIED</div>
+            1 random mythic, 25x trait shards, 3x legen fragments, 1x mythic fragment, 1x secret fragment, and 1x god fragment.
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1219,6 +1238,138 @@
         logFeed.removeChild(logFeed.children[0]);
       }
     }, 4500);
+
+    // --- LIVE HUD TIMERS ENGINE ---
+    function updateShenronSchedule(nextShenron) {
+      const tzLabel = document.getElementById('shenron-tz-label');
+      const grid = document.getElementById('shenron-times-grid');
+      if (!tzLabel || !grid) return;
+      
+      // Prevent regenerating the DOM every single second unnecessarily
+      if (grid.dataset.lastTarget === nextShenron.getTime().toString()) return;
+      grid.dataset.lastTarget = nextShenron.getTime().toString();
+
+      const tzName = Intl.DateTimeFormat().resolvedOptions().timeZone || "Local";
+      tzLabel.innerText = `> SPAWN SCHEDULE (LOCAL - ${tzName}):`;
+      
+      // Calculate the 8 daily spawn times (Every 3 hours starting at 00:00 UTC)
+      let times = [];
+      let baseDate = new Date();
+      baseDate.setUTCMinutes(0, 0, 0);
+      
+      for (let i = 0; i < 8; i++) {
+         let d = new Date(baseDate);
+         d.setUTCHours(i * 3);
+         times.push(d);
+      }
+      
+      // Sort them sequentially by local hour/minute
+      times.sort((a, b) => {
+         let timeA = a.getHours() * 60 + a.getMinutes();
+         let timeB = b.getHours() * 60 + b.getMinutes();
+         return timeA - timeB;
+      });
+      
+      grid.innerHTML = '';
+      times.forEach(t => {
+         // Format time perfectly as "02:00 AM" regardless of browser defaults
+         let h = t.getHours();
+         const ampm = h >= 12 ? 'PM' : 'AM';
+         h = h % 12;
+         h = h ? h : 12; 
+         const hStr = String(h).padStart(2, '0');
+         const mStr = String(t.getMinutes()).padStart(2, '0');
+         const displayStr = `${hStr}:${mStr} ${ampm}`;
+         
+         const span = document.createElement('span');
+         span.innerText = displayStr;
+         
+         // Apply red glow effect to the currently active target spawn time
+         if (t.getHours() === nextShenron.getHours() && t.getMinutes() === nextShenron.getMinutes()) {
+            span.style.color = 'var(--alert-red)';
+            span.style.textShadow = '0 0 10px var(--alert-red)';
+            span.style.fontWeight = 'bold';
+         }
+         
+         grid.appendChild(span);
+      });
+    }
+
+    function formatTimeLeft(ms, isUpdateFormat) {
+      if (ms <= 0) return isUpdateFormat ? "00 : 00 : 00 : 00" : "00:00:00";
+      const d = Math.floor(ms / (1000 * 60 * 60 * 24));
+      const h = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((ms % (1000 * 60)) / 1000);
+
+      const pad = (num) => String(num).padStart(2, '0');
+      
+      if (isUpdateFormat) {
+        return `${pad(d)} : ${pad(h)} : ${pad(m)} : ${pad(s)}`;
+      }
+      return `${pad(h)}:${pad(m)}:${pad(s)}`;
+    }
+
+    function updateHudTimers() {
+      const now = new Date();
+      
+      /* --- 1. SUPER SHENRON 3-HOUR ALGORITHM --- */
+      // Finds the next interval perfectly divisible by 3 in UTC time
+      let nextShenron = new Date(now);
+      nextShenron.setUTCMinutes(0, 0, 0); // start at top of the hour
+      
+      let utcHour = nextShenron.getUTCHours();
+      let remainder = utcHour % 3;
+      
+      // If we are currently inside the shenron hour (e.g. 11:15), target the NEXT one (+3)
+      if (remainder === 0 && now.getUTCMinutes() >= 0 && (now.getTime() - nextShenron.getTime() > 0)) {
+         nextShenron.setUTCHours(utcHour + 3);
+      } else {
+         nextShenron.setUTCHours(utcHour + (3 - remainder));
+      }
+      
+      // Safety fail-forward
+      if (nextShenron.getTime() <= now.getTime()) {
+        nextShenron.setUTCHours(nextShenron.getUTCHours() + 3);
+      }
+
+      const shenronMs = nextShenron.getTime() - now.getTime();
+      document.getElementById('shenron-timer').innerText = formatTimeLeft(shenronMs, false);
+      
+      // Auto-convert to User's Local Time System for HUD display
+      const localOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+      document.getElementById('shenron-local').innerText = `LOCAL: ${nextShenron.toLocaleTimeString(undefined, localOptions)} (Automatically converted to your timezone)`;
+
+      // Populate & highlight the daily schedule grid in FAQ #31
+      updateShenronSchedule(nextShenron);
+
+      /* --- 2. WEEKLY AUTO-LOOPING GAME UPDATE COUNTDOWN --- */
+      // Automatically targets Every Saturday at 14:00 UTC (10:00 PM UTC+8)
+      let updateTarget = new Date(now);
+      updateTarget.setUTCHours(14, 0, 0, 0); // 14:00 UTC is exactly 10 PM in GMT+8
+      
+      let currentDay = updateTarget.getUTCDay();
+      let daysUntilSaturday = (6 - currentDay + 7) % 7; // 6 is Saturday
+      
+      // If it is Saturday but it is already past 14:00 UTC, loop to the NEXT week (+7 days)
+      if (daysUntilSaturday === 0 && now.getTime() >= updateTarget.getTime()) {
+        daysUntilSaturday = 7;
+      }
+      
+      updateTarget.setUTCDate(updateTarget.getUTCDate() + daysUntilSaturday);
+
+      const updateMs = updateTarget.getTime() - now.getTime();
+      
+      document.getElementById('update-timer').innerText = formatTimeLeft(updateMs, true);
+      
+      const fullDateOptions = { month: 'numeric', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true };
+      document.getElementById('update-local').innerText = `TARGET: ${updateTarget.toLocaleString(undefined, fullDateOptions)} (Automatically converted to your timezone)`;
+    }
+
+    // Boot Up Timers
+    setInterval(updateHudTimers, 1000);
+    updateHudTimers();
+
   </script>
 </body>
 </html>
