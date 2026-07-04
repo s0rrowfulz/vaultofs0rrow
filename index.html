@@ -413,7 +413,7 @@
       </div>
       <div class="timer-group">
         <div class="timer-label">> NEXT UPDATE</div>
-        <div class="timer-value" id="update-timer" style="color: var(--accent-purple);">00 : 00 : 00 : 00</div>
+        <div class="timer-value" id="update-timer" style="color: var(--accent-purple);">0d 0hr 0m 0s</div>
         <div class="timer-local" id="update-local">TARGET: TBD (Automatically converted to your timezone)</div>
       </div>
     </div>
@@ -986,7 +986,7 @@
       <div class="faq-item">
         <span class="hover-status-line">> SCANNING EVENT SCHEDULE...</span>
         <button class="faq-question">
-          <span class="question-text">31. What is the schedule for events?</span>
+          <span class="question-text">31. What is the schedule for events and for SuperShenron?</span>
           <span class="icon">▶</span>
         </button>
         <div class="faq-answer">
@@ -1296,17 +1296,17 @@
     }
 
     function formatTimeLeft(ms, isUpdateFormat) {
-      if (ms <= 0) return isUpdateFormat ? "00 : 00 : 00 : 00" : "00:00:00";
+      if (ms <= 0) return isUpdateFormat ? "0d 0hr 0m 0s" : "00:00:00";
       const d = Math.floor(ms / (1000 * 60 * 60 * 24));
       const h = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const m = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
       const s = Math.floor((ms % (1000 * 60)) / 1000);
 
-      const pad = (num) => String(num).padStart(2, '0');
-      
       if (isUpdateFormat) {
-        return `${pad(d)} : ${pad(h)} : ${pad(m)} : ${pad(s)}`;
+        return `${d}d ${h}hr ${m}m ${s}s`;
       }
+      
+      const pad = (num) => String(num).padStart(2, '0');
       return `${pad(h)}:${pad(m)}:${pad(s)}`;
     }
 
